@@ -1,0 +1,23 @@
+on: pull_request
+
+name: bump-versions
+jobs:
+  bump-versions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo "${{ github.event.pull_request.head.ref || github.head_ref }}")"
+        id: extract_branch
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Edit file
+        run: ./scripts/update_version.sh ${{ steps.extract_branch.outputs.branch }}
+      - name: Commit
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH_NAME=$(echo "${{ steps.extract_branch.outputs.branch }}")
+          git config user.email "bot@rudderstack.com"
+          git config user.name "Github Action"
+          git add . && git commit --amend --no-edit && git push origin HEAD:$BRANCH_NAME -f
