@@ -17,10 +17,11 @@ import (
 )
 
 var (
-	version                  = ""
-	commit                   = ""
-	buildDate                = ""
-	builtBy, enterpriseToken string
+	version         = "testChange"
+	commit          = ""
+	buildDate       = ""
+	builtBy         = "me"
+	enterpriseToken string
 )
 
 func main() {
